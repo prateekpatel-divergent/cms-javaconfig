@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Built-By: Divergent
+Build-Jdk: 15.0.1
+Main-Class: com.divergentsl.cmsjavaconfig.ClinicManagmentSystem
+Created-By: Maven Integration for Eclipse
+
