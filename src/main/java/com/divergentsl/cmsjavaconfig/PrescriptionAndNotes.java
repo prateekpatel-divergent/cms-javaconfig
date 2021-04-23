@@ -11,6 +11,8 @@ import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.divergentsl.cmsjavaconfig.dao.PrescriptionAndNotesDao;
@@ -26,8 +28,9 @@ import com.divergentsl.cmsjavaconfig.dao.PrescriptionAndNotesDao;
 public class PrescriptionAndNotes {
 	
 	private static Logger logger = LoggerFactory.getLogger(PrescriptionAndNotes.class);
-	
-	public PrescriptionAndNotesDao prescriptionAndNotesDao;
+
+	@Autowired
+	private PrescriptionAndNotesDao prescriptionAndNotesDao;
 
 	/**
 	 * Get Information
@@ -47,7 +50,7 @@ public class PrescriptionAndNotes {
 		System.out.println("Enter doctor id");
 		String doctorid = sc.nextLine();
 
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		map.put("1", prescriId);
 		map.put("2", patientId);
 		map.put("3", prescription);
@@ -63,7 +66,7 @@ public class PrescriptionAndNotes {
 		try {
 			prescriptionAndNotesDao.insert("prescriId", "patientId", "prescription", "note", "doctorid");
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 
 	}
@@ -84,8 +87,8 @@ public class PrescriptionAndNotes {
 					+ "inner join prescription on patient.p_id = prescription.p_id\r\n"
 					+ "order by appoinment.appoinment_date desc;";
 			ResultSet rs = st.executeQuery(sql);
-			System.out.println("\n*-*-*-*-*-*-*-*-*-* History Of Patient *-*-*-*-*-*-*-*-*-*-*-*-*");
-			System.out.println(
+			logger.info("\n*-*-*-*-*-*-*-*-*-* History Of Patient *-*-*-*-*-*-*-*-*-*-*-*-*");
+			logger.info(
 					"\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Patient Data*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
 			while (rs.next()) {
 				String pid = rs.getString(1);
@@ -102,14 +105,13 @@ public class PrescriptionAndNotes {
 				System.out.printf("%5s  %20s  %5s  %7s  %5s  %20s  %3s  %15s  %15s  %25s  %25s\n", pid, pname, page,
 						pgender, doctorId, doctorname, appoinId, pproblem, appoindate, prescription, note);
 			}
-			System.out.println(
+			logger.info(
 					"*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
 			st.close();
 			con.close();
 
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 

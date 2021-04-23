@@ -1,15 +1,11 @@
 package com.divergentsl.cmsjavaconfig;
 
-import java.io.Console;
 import java.sql.SQLException;
 import java.util.Scanner;
-import java.util.logging.ConsoleHandler;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.divergentsl.cmsjavaconfig.dao.AdminDao;
@@ -28,25 +24,29 @@ public class Admin {
 	private static Logger logger = LoggerFactory.getLogger(Admin.class);
 	
 	@Autowired
-	public  AdminDao adminDao;
+	Environment env;
+	
+	@Autowired
+	private  AdminDao adminDao;
 
 	@Autowired
-	public MainMenu mainMenu;
+	private MainMenu mainMenu;
 	
 	@Autowired
-	public Patient patient;
+	private Patient patient;
 	
 	@Autowired
-	public CurdDoctor curdDoctor;
+	private CurdDoctor curdDoctor;
 	
 	@Autowired
-	public Drug drug;
+	private Drug drug;
 	
 	@Autowired
-	public LabTest labTest;
+	private LabTest labTest;
 	
 	@Autowired
-	public Appoinment appoinment;
+	private Appoinment appoinment;
+	
 	/**
 	 * Admin Login
 	 * 
@@ -58,17 +58,16 @@ public class Admin {
 		try {
 
 			Scanner sc = new Scanner(System.in);
-			Console cons = System.console();
 			System.out.println("---------------Admin Login -------------------");
 			System.out.println("Enter Username : ");
 			String username = sc.nextLine();
 			System.out.println("Enter Password : ");
 			String password = sc.nextLine();
 			if (adminDao.adminLogin(username, password)) {
-				logger.debug("Admin Login Successful");
+				logger.info("Admin Login Successful");
 				return true;
 			} else {
-				logger.debug("Incorrect Username & Password");
+				logger.info("Incorrect Username & Password");
 				return false;
 			}
 
@@ -110,7 +109,7 @@ public class Admin {
 			appoinment.appoinmentPanel();
 			break;
 		case 6:
-			logger.debug("Logout Successfully");
+			logger.info("Logout Successfully");
 			try {
 				mainMenu.startAgain();
 			} catch (SQLException e) {
@@ -118,7 +117,7 @@ public class Admin {
 			}
 			break;
 		default:
-			logger.debug("Back");
+			logger.info("Back");
 			break;
 		}
 	}

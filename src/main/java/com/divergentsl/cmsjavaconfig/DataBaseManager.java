@@ -4,11 +4,16 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DataBaseManager implements ClinicDatabase {
 
+	@Autowired
+	Environment env;
+	
 	static {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");

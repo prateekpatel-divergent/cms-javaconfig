@@ -6,6 +6,7 @@ import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Component("mainMenu")
@@ -14,16 +15,19 @@ public class MainMenu {
 	private static Logger logger = LoggerFactory.getLogger(MainMenu.class);
 	
 	@Autowired
-	public Doctor doctor;
+	private Doctor doctor;
 	
 	@Autowired
-	public Admin admin;
+	private Admin admin;
+	
+	@Autowired
+	Environment env;
 	/**
 	 * Admin Start Method
 	 * 
 	 * @throws SQLException
 	 */
-	public void startAgain() throws SQLException {
+	public String startAgain() throws SQLException {
 		Scanner sc = new Scanner(System.in);
 		while (true) {
 			System.out.println("\n----Login Panel----");
@@ -67,13 +71,17 @@ public class MainMenu {
 
 			case "3":
 				System.exit(0);
+				logger.info("Exit");
 				break;
 
 			default:
-				logger.debug("Invalid Input");
+				logger.info("Invalid Input");
 				break;
 			}
-			sc.close();
 		}
+	}
+	
+	public String getPropertyValue() {
+		return env.getProperty("test");
 	}
 }

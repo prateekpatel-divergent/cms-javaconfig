@@ -9,6 +9,7 @@ import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.divergentsl.cmsjavaconfig.dao.PatientDao;
@@ -25,13 +26,13 @@ public class Patient {
 	private static Logger logger = LoggerFactory.getLogger(Patient.class);
 
 	@Autowired
-	public PatientDao patientDao;
+	private PatientDao patientDao;
 	
 	@Autowired
-	public Admin admin;
+	private Admin admin;
 	
 	@Autowired
-	public Doctor doctor;
+	private Doctor doctor;
 	/**
 	 * Show All OPtion Of Admin to CRUD Operation
 	 */
@@ -122,7 +123,7 @@ public class Patient {
 		try {
 			String sql = "UPDATE patient SET problem = '" + pproblem + "' where p_id= '" + pid + "';";
 		} catch (Exception e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -149,7 +150,7 @@ public class Patient {
 				System.out.println(
 						"*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
 			} else {
-				logger.debug("Record is not Found");
+				logger.info("Record is not Found");
 			}
 
 		} catch (SQLException e) {
@@ -167,17 +168,17 @@ public class Patient {
 
 		try {
 			if (patientDao.searchById(did).size() == 0) {
-				logger.debug("\nPatient not found!");
+				logger.info("\nPatient not found!");
 			} else {
 				try {
 					patientDao.delete(did);
-					logger.debug("\nRecord Deleted Successfully...");
+					logger.info("\nRecord Deleted Successfully...");
 				} catch (SQLException e) {
-					logger.debug(e.getMessage());
+					logger.info(e.getMessage());
 				}
 			}
 		} catch (Exception e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -201,7 +202,7 @@ public class Patient {
 					"*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
 
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -215,7 +216,7 @@ public class Patient {
 			Connection con = DriverManager.getConnection(ClinicDatabase.URL, ClinicDatabase.USERNAME,
 					ClinicDatabase.PASSWORD);
 			Statement st = con.createStatement();
-			System.out.println("\nEnter Patient Id");
+			logger.info("\nEnter Patient Id");
 			String id = sc.nextLine();
 			String sql = "select appoinment.P_ID,appoinment.P_Name,appoinment.ACurrent_Date,appoinment.Problem,doctor.D_Name,doctor.fee\r\n"
 					+ "from appoinment join doctor on appoinment.d_id = doctor.D_Id where appoinment.p_id ='" + id
@@ -223,7 +224,7 @@ public class Patient {
 			ResultSet rs = st.executeQuery(sql);
 
 			if (!rs.next()) {
-				logger.debug("Record Is not Found!\n");
+				logger.info("Record Is not Found!\n");
 				doctor.printDoctorOptions();
 			} else {
 				System.out.println(
@@ -244,7 +245,7 @@ public class Patient {
 			st.close();
 			con.close();
 		} catch (Exception e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 

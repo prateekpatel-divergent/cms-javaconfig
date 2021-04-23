@@ -1,7 +1,6 @@
 package com.divergentsl.cmsjavaconfig.dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,6 +13,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
 import com.divergentsl.cmsjavaconfig.ClinicDatabase;
@@ -33,7 +33,7 @@ public class DrugDao {
 	public static final String RATE = "rate";
 
 	@Autowired
-	public ClinicDatabase clinicDatabase;
+	ClinicDatabase clinicDatabase;
 
 	private static Logger logger = LoggerFactory.getLogger(DrugDao.class);
 
@@ -103,7 +103,7 @@ public class DrugDao {
 		stmt.setString(2, NAME);
 		stmt.setString(3, RATE);
 		int i = stmt.executeUpdate();
-		logger.debug("\ninserted record successfully...");
+		logger.info("\ninserted record successfully...");
 		con.close();
 		return i;
 	}

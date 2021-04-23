@@ -9,6 +9,8 @@ import java.sql.SQLException;
  * @author Divergent
  *
  */
+
+
 public interface ClinicDatabase {
 	final String URL = "jdbc:mysql://localhost:3306/clinic_Managment_System";
 	final String USERNAME = "root";

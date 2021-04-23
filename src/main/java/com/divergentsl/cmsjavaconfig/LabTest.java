@@ -8,6 +8,7 @@ import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.divergentsl.cmsjavaconfig.dao.LabTestDao;
@@ -26,10 +27,10 @@ public class LabTest {
 	private static Logger logger = LoggerFactory.getLogger(LabTest.class);
 
 	@Autowired
-	public LabTestDao labTestDao;
+	private LabTestDao labTestDao;
 
 	@Autowired
-	public Admin admin;
+	private Admin admin;
 	/**
 	 * Show All Operation on Console
 	 */
@@ -109,7 +110,7 @@ public class LabTest {
 			labTestDao.insert("lbid", "pid", "testname", "currentdate", "5");
 			logger.debug("Insert successfully!!!!!!");
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -130,7 +131,7 @@ public class LabTest {
 
 		try {
 			if (labTestDao.searchById(id).size() == 0) {
-				logger.debug("\n Record is Not Found");
+				logger.info("\n Record is Not Found");
 			} else {
 				try {
 					Map<String, String> labTest = labTestDao.searchById(id);
@@ -145,11 +146,11 @@ public class LabTest {
 								"*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
 					}
 				} catch (SQLException e) {
-					logger.debug(e.getMessage());
+					logger.info(e.getMessage());
 				}
 			}
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -163,17 +164,17 @@ public class LabTest {
 
 		try {
 			if (labTestDao.searchById(id).size() == 0) {
-				logger.debug("\nTest is not found!");
+				logger.info("\nTest is not found!");
 			} else {
 				try {
 					labTestDao.delete(id);
-					logger.debug("\nRecord Deleted Successfully...");
+					logger.info("\nRecord Deleted Successfully...");
 				} catch (SQLException e) {
-					logger.debug(e.getMessage());
+					logger.info(e.getMessage());
 				}
 			}
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -194,8 +195,7 @@ public class LabTest {
 			System.out.println(
 					"*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
 		} catch (SQLException e) {
-			e.printStackTrace();
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.divergentsl.cmsjavaconfig.ClinicDatabase;
 import com.divergentsl.cmsjavaconfig.DataBaseManager;
-
+import org.springframework.core.env.Environment;
 /**
  * Admin Dao
  * 
@@ -24,9 +24,8 @@ public class AdminDao {
 	public static final String PASSWORD = "password";
 
 	@Autowired
-	public ClinicDatabase clinicDatabase;
+	ClinicDatabase clinicDatabase;
 	
-
 	/**
 	 * Admin LOgin Method With Parameter
 	 * 
@@ -46,7 +45,7 @@ public class AdminDao {
 		ResultSet rs = st.executeQuery("select * from administration where a_username = '" + username
 				+ "' AND a_password = '" + password + "'");
 
-		if (rs.next())
+		if(rs.next())
 			return true;
 		else
 			return false;

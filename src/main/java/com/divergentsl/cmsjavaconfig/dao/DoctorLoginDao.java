@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
 import com.divergentsl.cmsjavaconfig.ClinicDatabase;
@@ -23,7 +24,7 @@ public class DoctorLoginDao {
 	public static final String PASSWORD = "password";
 
 	@Autowired
-	public ClinicDatabase clinicDatabase;
+	ClinicDatabase clinicDatabase;
 
 
 	/**

@@ -14,6 +14,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
 import com.divergentsl.cmsjavaconfig.ClinicDatabase;
@@ -42,7 +43,7 @@ public class AppoinmentDao {
 	private static Logger logger = LoggerFactory.getLogger(AppoinmentDao.class);
 	
 	@Autowired
-	public ClinicDatabase clinicDatabase;
+	ClinicDatabase clinicDatabase;
 
 
 	/**
@@ -78,7 +79,7 @@ public class AppoinmentDao {
 		stmt.setString(7, DID);
 		stmt.setString(8, PID);
 		int i = stmt.executeUpdate();
-		logger.debug("\ninserted record successfully...");
+		logger.info("\ninserted record successfully...");
 		con.close();
 		return i;
 	}

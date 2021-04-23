@@ -14,6 +14,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
 import com.divergentsl.cmsjavaconfig.ClinicDatabase;
@@ -44,7 +45,7 @@ public class PatientDao {
 	private static Logger logger = LoggerFactory.getLogger(PatientDao.class);
 
 	@Autowired
-	public ClinicDatabase clinicDatabase;
+	ClinicDatabase clinicDatabase;
 
 	/**
 	 * Delete Record By ID
@@ -140,7 +141,7 @@ public class PatientDao {
 		stmt.setString(9, APPOINTMENTDATE);
 		stmt.setString(10, PROBLEM);
 		int i = stmt.executeUpdate();
-		logger.debug("\ninserted record successfully...");
+		logger.info("\ninserted record successfully...");
 		con.close();
 		return i;
 	}

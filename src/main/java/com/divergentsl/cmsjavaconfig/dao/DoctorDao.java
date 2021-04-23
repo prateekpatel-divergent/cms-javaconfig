@@ -13,6 +13,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
 import com.divergentsl.cmsjavaconfig.ClinicDatabase;
@@ -33,7 +34,7 @@ public class DoctorDao {
 	public static final String DEGREE = "ddegree";
 
 	@Autowired
-	public ClinicDatabase clinicDatabase;
+	ClinicDatabase clinicDatabase;
 
 	private static Logger logger = LoggerFactory.getLogger(DoctorDao.class);
 	
@@ -101,10 +102,7 @@ public class DoctorDao {
 	public int insert(String did, String dname, String speciality, String contactno, String fee, String degree)
 			throws SQLException {
 
-		Connection con = null;
-		Statement st = null;
-
-		con = clinicDatabase.getConnection();
+		Connection con= clinicDatabase.getConnection();
 		String sql = "insert into doctor values(?,?,?,?,?,?)";
 		PreparedStatement stmt = con.prepareStatement(sql);
 		stmt.setString(1, ID);
@@ -114,7 +112,7 @@ public class DoctorDao {
 		stmt.setString(5, FEE);
 		stmt.setString(6, DEGREE);
 		int i = stmt.executeUpdate();
-		logger.debug("\ninserted record successfully...");
+		logger.info("\ninserted record successfully...");
 		con.close();
 		return i;
 	}

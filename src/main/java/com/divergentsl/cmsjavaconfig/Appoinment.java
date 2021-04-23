@@ -9,6 +9,7 @@ import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.divergentsl.cmsjavaconfig.dao.AppoinmentDao;
@@ -26,7 +27,7 @@ public class Appoinment {
 	private static Logger logger = LoggerFactory.getLogger(Appoinment.class);
 	
 	@Autowired
-	public AppoinmentDao appoinmentDao;
+	private AppoinmentDao appoinmentDao;
 
 	/**
 	 * Get Patient Information
@@ -68,8 +69,7 @@ public class Appoinment {
 		try {
 			appoinmentDao.insert("appoinid", "patientname", "doctername", "problem", "appoindate","currentdate", "doctorid", "patientid");
 		} catch (SQLException e) {
-			e.printStackTrace();
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -93,7 +93,7 @@ public class Appoinment {
 					"*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
 
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 }

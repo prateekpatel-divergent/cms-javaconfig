@@ -1,16 +1,12 @@
 package com.divergentsl.cmsjavaconfig;
 
-import java.io.Console;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.divergentsl.cmsjavaconfig.dao.DoctorLoginDao;
@@ -26,22 +22,22 @@ import com.divergentsl.cmsjavaconfig.MainMenu;
 @Component
 public class Doctor {
 
-	private static Logger logger = LoggerFactory.getLogger(ClinicManagmentSystem.class);
+	private static Logger logger = LoggerFactory.getLogger(Doctor.class);
 	
 	@Autowired
-	public MainMenu mainMenu;
+	private MainMenu mainMenu;
 	
 	@Autowired
-	public DoctorLoginDao doctorLoginDao;
+	private DoctorLoginDao doctorLoginDao;
 	
 	@Autowired
-	public Patient patient;
+	private Patient patient;
 	
 	@Autowired
-	public PrescriptionAndNotes prescriptionAndNotes;
+	private PrescriptionAndNotes prescriptionAndNotes;
 	
 	@Autowired
-	public Appoinment appoinment;
+	private Appoinment appoinment;
 	
 	/**
 	 * Get Doctor Data
@@ -71,22 +67,22 @@ public class Doctor {
 				appoinment.showAllAppoinment();
 				break;
 			case 4:
-				prescriptionAndNotes.historyAndPresciption();
+				PrescriptionAndNotes.historyAndPresciption();
 				break;
 			case 5:
 				patient.generateInvoice();
 				break;
 			case 6:
-				logger.debug("Logout Successfully");
+				logger.info("Logout Successfully");
 				try {
 					mainMenu.startAgain();
 				} catch (SQLException e) {
-					logger.debug(e.getMessage());
+					logger.info(e.getMessage());
 					e.printStackTrace();
 				}
 				break;
 			default:
-				logger.debug("Choice Right Option");
+				logger.info("Choice Right Option");
 				break;
 			}
 		}
@@ -109,16 +105,16 @@ public class Doctor {
 			System.out.println("\nEnter Password: ");
 			String password = sc.nextLine();
 			if (doctorLoginDao.doctorLogin(username, password)) {
-			logger.debug("Doctor Login Successful");
+			logger.info("Doctor Login Successful");
 				return true;
 			} else {
-				logger.debug("Incorrect Username & Password");
+				logger.info("Incorrect Username & Password");
 				return false;
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 		return false;
 	}

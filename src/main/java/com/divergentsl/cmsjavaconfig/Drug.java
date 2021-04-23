@@ -9,6 +9,7 @@ import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.divergentsl.cmsjavaconfig.dao.DrugDao;
@@ -25,10 +26,10 @@ public class Drug {
 	private static Logger logger = LoggerFactory.getLogger(Drug.class);
 	
 	@Autowired
-	public DrugDao drugDao;
+	private DrugDao drugDao;
 
 	@Autowired
-	public Admin admin;
+	private Admin admin;
 	/**
 	 * Show All Option
 	 */
@@ -102,7 +103,7 @@ public class Drug {
 			map.get("rate");
 			drugDao.insert("id", "name", "rate");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -115,7 +116,7 @@ public class Drug {
 		String id = sc.nextLine();
 		try {
 			if (drugDao.searchById(id).size() == 0) {
-				logger.debug("\n Record is Not Found");
+				logger.info("\n Record is Not Found");
 			} else {
 				try {
 					Map<String, String> drug = drugDao.searchById(id);
@@ -129,11 +130,11 @@ public class Drug {
 								"*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
 					}
 				} catch (SQLException e) {
-					logger.debug(e.getMessage());
+					logger.info(e.getMessage());
 				}
 			}
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 
 	}
@@ -148,17 +149,17 @@ public class Drug {
 
 		try {
 			if (drugDao.searchById(id).size() == 0) {
-				logger.debug("\nDrug not found!");
+				logger.info("\nDrug not found!");
 			} else {
 				try {
 					drugDao.delete(id);
 					logger.debug("\nRecord Deleted Successfully...");
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.info(e.getMessage());
 				}
 			}
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -177,7 +178,7 @@ public class Drug {
 			System.out.println(
 					"*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 }

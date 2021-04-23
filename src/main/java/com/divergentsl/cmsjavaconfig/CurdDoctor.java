@@ -5,6 +5,7 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.divergentsl.cmsjavaconfig.dao.DoctorDao;
@@ -13,14 +14,13 @@ import com.divergentsl.cmsjavaconfig.dao.DoctorDao;
 @Component
 public class CurdDoctor {
 
-	static Scanner sc = new Scanner(System.in);
 	private static Logger logger = LoggerFactory.getLogger(CurdDoctor.class);
 
 	@Autowired
-	public DoctorDao doctorDao;
+	private DoctorDao doctorDao;
 	
 	@Autowired
-	public Admin admin;
+	private Admin admin;
 
 	/**
 	 * It show Option on console
@@ -38,6 +38,7 @@ public class CurdDoctor {
 	 * It Select Option on Console Panel to choice on It.
 	 */
 	public void docterPanel() {
+		Scanner sc = new Scanner(System.in);
 		while (true) {
 			System.out.println("Enter Your Choice : ");
 
@@ -73,6 +74,7 @@ public class CurdDoctor {
 	 * @return
 	 */
 	public Map<String, String> inputDoctorData() {
+		Scanner sc = new Scanner(System.in);
 		System.out.println("Enter Doctor_Id");
 		String did = sc.nextLine();
 		System.out.println("Enter Doctor Name");
@@ -103,8 +105,7 @@ public class CurdDoctor {
 		try {
 			doctorDao.insert("did", "dname", "speciality", "contactno", "fee", "degree");
 		} catch (SQLException e) {
-			e.printStackTrace();
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -119,7 +120,7 @@ public class CurdDoctor {
 
 		try {
 			if (doctorDao.searchById(id).size() == 0) {
-				logger.debug("\nDoctor not found!");
+				logger.info("\nDoctor not found!");
 			} else {
 
 				try {
@@ -134,15 +135,15 @@ public class CurdDoctor {
 						System.out.println(
 								"*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
 					} else {
-						logger.debug("Record is not found");
+						logger.info("Record is not found");
 					}
 					logger.debug("\nRecord Find Successfully...");
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.info(e.getMessage());
 				}
 			}
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -156,17 +157,17 @@ public class CurdDoctor {
 
 		try {
 			if (doctorDao.searchById(did).size() == 0) {
-				logger.debug("\nDoctor not found!");
+				logger.info("\nDoctor not found!");
 			} else {
 				try {
 					doctorDao.delete(did);
-					logger.debug("\nRecord Deleted Successfully...");
+					logger.info("\nRecord Deleted Successfully...");
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.info(e.getMessage());
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -187,8 +188,7 @@ public class CurdDoctor {
 			System.out.println(
 					"*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
 		} catch (SQLException e) {
-			e.printStackTrace();
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 }
