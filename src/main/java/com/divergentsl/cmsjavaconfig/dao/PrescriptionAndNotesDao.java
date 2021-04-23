@@ -3,16 +3,15 @@ package com.divergentsl.cmsjavaconfig.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
-import com.divergentsl.cmsjavaconfig.ClinicDatabase;
-
+import com.divergentsl.cmsjavaconfig.DataBaseManager;
 
 /**
  * Prescription And Notes Class
@@ -30,11 +29,9 @@ public class PrescriptionAndNotesDao {
 	public static final String DID = "d_id";
 
 	@Autowired
-	ClinicDatabase clinicDatabase;
+	private DataBaseManager dataBaseManager;
 
-	
 	private static Logger logger = LoggerFactory.getLogger(PrescriptionAndNotesDao.class);
-
 
 	/**
 	 * Insert Record Into Prescription and Notes
@@ -48,8 +45,7 @@ public class PrescriptionAndNotesDao {
 	 * @throws SQLException
 	 */
 	public int insert(String preId, String pId, String prescription, String note, String dId) throws SQLException {
-		Connection con = null;
-		con = clinicDatabase.getConnection();
+		Connection con = dataBaseManager.getConnection();
 		String sql = "insert into prescription values(?,?,?,?,?)";
 		PreparedStatement stmt = con.prepareStatement(sql);
 		stmt.setString(1, preId);

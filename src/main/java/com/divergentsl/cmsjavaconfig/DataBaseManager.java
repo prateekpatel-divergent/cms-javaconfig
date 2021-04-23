@@ -9,11 +9,12 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DataBaseManager implements ClinicDatabase {
-
+public class DataBaseManager implements ClinicDatabase{
+	
 	@Autowired
 	Environment env;
-	
+
+
 	static {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -22,8 +23,8 @@ public class DataBaseManager implements ClinicDatabase {
 			System.exit(100);
 		}
 	}
-
+	
 	public Connection getConnection() throws SQLException {
-		return DriverManager.getConnection(ClinicDatabase.URL, ClinicDatabase.USERNAME, ClinicDatabase.PASSWORD);
+		return DriverManager.getConnection(env.getProperty(URL), env.getProperty(USERNAME), env.getProperty(PASSWORD));
 	}
 }

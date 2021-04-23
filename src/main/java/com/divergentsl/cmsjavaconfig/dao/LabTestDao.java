@@ -14,10 +14,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
-import com.divergentsl.cmsjavaconfig.ClinicDatabase;
+import com.divergentsl.cmsjavaconfig.DataBaseManager;
 
 /**
  * LabTest Class
@@ -35,8 +34,8 @@ public class LabTestDao {
 	public static final String RATE = "RATE";
 
 	@Autowired
-	ClinicDatabase clinicDatabase;
-
+	private DataBaseManager dataBaseManager;
+	
 	private static Logger logger = LoggerFactory.getLogger(LabTestDao.class);
 
 	/**
@@ -47,10 +46,8 @@ public class LabTestDao {
 	 * @throws SQLException
 	 */
 	public int delete(String id) throws SQLException {
-		Connection con = null;
-		Statement st = null;
-		con = clinicDatabase.getConnection();
-		st = con.createStatement();
+		Connection con = dataBaseManager.getConnection();
+		Statement st = con.createStatement();
 		st.executeUpdate("delete from lab_test where PLab_id = '" + id + "'");
 		st.close();
 		con.close();
@@ -67,13 +64,9 @@ public class LabTestDao {
 	 */
 	public Map searchById(String id) throws SQLException {
 
-		Connection con = null;
-		Statement st = null;
+		Connection con = dataBaseManager.getConnection();
+		Statement st = con.createStatement();
 		Map<String, String> map = new HashMap<>();
-
-		con = clinicDatabase.getConnection();
-		st = con.createStatement();
-
 		ResultSet rs = st.executeQuery("select * from lab_test where plab_id = '" + id + "'");
 
 		if (rs.next()) {
@@ -100,10 +93,7 @@ public class LabTestDao {
 	 * @throws SQLException
 	 */
 	public int insert(String labid, String pid, String test, String date, String rate) throws SQLException {
-
-		Connection con = null;
-
-		con = clinicDatabase.getConnection();
+		Connection con = dataBaseManager.getConnection();
 		String sql = "insert into lab_test values(?,?,?,?,?)";
 		PreparedStatement stmt = con.prepareStatement(sql);
 		stmt.setString(1, ID);
@@ -126,10 +116,8 @@ public class LabTestDao {
 	 * @throws SQLException
 	 */
 	public List<Map<String, String>> list() throws SQLException {
-		Connection con = null;
-		Statement st = null;
-		con = clinicDatabase.getConnection();
-		st = con.createStatement();
+		Connection con = dataBaseManager.getConnection();
+		Statement st = con.createStatement();
 		ResultSet rs = st.executeQuery("select * from lab_test");
 		List<Map<String, String>> labTestList = new ArrayList<>();
 		while (rs.next()) {

@@ -210,43 +210,44 @@ public class Patient {
 	 * Generate Invoice Of Patient
 	 */
 	public void generateInvoice() {
-		try {
-			Scanner sc = new Scanner(System.in);
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection(ClinicDatabase.URL, ClinicDatabase.USERNAME,
-					ClinicDatabase.PASSWORD);
-			Statement st = con.createStatement();
-			logger.info("\nEnter Patient Id");
-			String id = sc.nextLine();
-			String sql = "select appoinment.P_ID,appoinment.P_Name,appoinment.ACurrent_Date,appoinment.Problem,doctor.D_Name,doctor.fee\r\n"
-					+ "from appoinment join doctor on appoinment.d_id = doctor.D_Id where appoinment.p_id ='" + id
-					+ "';";
-			ResultSet rs = st.executeQuery(sql);
-
-			if (!rs.next()) {
-				logger.info("Record Is not Found!\n");
-				doctor.printDoctorOptions();
-			} else {
-				System.out.println(
-						"\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Patient Invoice*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
-				String pid = rs.getString(1);
-				String pname = rs.getString(2);
-				Date pcurrentdate = rs.getDate(3);
-				String pproblem = rs.getString(4);
-				String dname = rs.getString(5);
-				String fee = rs.getString(6);
-				System.out.printf("%30s  %30s\n", "Patient Id :" + pid, "Date : " + pcurrentdate);
-				System.out.printf("%30s %30s\n", "Patient Name :" + pname, "Problem :" + pproblem);
-				System.out.printf("%30s %30s\n\n", "Docter Name :" + dname, "Fee :" + fee);
-				System.out.println(
-						"*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
-			}
-			doctor.printDoctorOptions();
-			st.close();
-			con.close();
-		} catch (Exception e) {
-			logger.info(e.getMessage());
-		}
+		logger.info("Generate Invoice");
+//		try {
+//			Scanner sc = new Scanner(System.in);
+//			Class.forName("com.mysql.cj.jdbc.Driver");
+//			Connection con = DriverManager.getConnection(ClinicDatabase.URL, ClinicDatabase.USERNAME,
+//					ClinicDatabase.PASSWORD);
+//			Statement st = con.createStatement();
+//			logger.info("\nEnter Patient Id");
+//			String id = sc.nextLine();
+//			String sql = "select appoinment.P_ID,appoinment.P_Name,appoinment.ACurrent_Date,appoinment.Problem,doctor.D_Name,doctor.fee\r\n"
+//					+ "from appoinment join doctor on appoinment.d_id = doctor.D_Id where appoinment.p_id ='" + id
+//					+ "';";
+//			ResultSet rs = st.executeQuery(sql);
+//
+//			if (!rs.next()) {
+//				logger.info("Record Is not Found!\n");
+//				doctor.printDoctorOptions();
+//			} else {
+//				System.out.println(
+//						"\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Patient Invoice*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
+//				String pid = rs.getString(1);
+//				String pname = rs.getString(2);
+//				Date pcurrentdate = rs.getDate(3);
+//				String pproblem = rs.getString(4);
+//				String dname = rs.getString(5);
+//				String fee = rs.getString(6);
+//				System.out.printf("%30s  %30s\n", "Patient Id :" + pid, "Date : " + pcurrentdate);
+//				System.out.printf("%30s %30s\n", "Patient Name :" + pname, "Problem :" + pproblem);
+//				System.out.printf("%30s %30s\n\n", "Docter Name :" + dname, "Fee :" + fee);
+//				System.out.println(
+//						"*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
+//			}
+//			doctor.printDoctorOptions();
+//			st.close();
+//			con.close();
+//		} catch (Exception e) {
+//			logger.info(e.getMessage());
+//		}
 	}
 
 }

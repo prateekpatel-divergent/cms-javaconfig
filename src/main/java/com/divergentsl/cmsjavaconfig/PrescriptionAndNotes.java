@@ -75,44 +75,45 @@ public class PrescriptionAndNotes {
 	 * History and Prescription of all Patient
 	 */
 	public static void historyAndPresciption() {
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection(ClinicDatabase.URL, ClinicDatabase.USERNAME,
-					ClinicDatabase.PASSWORD);
-			Statement st = con.createStatement();
-			String sql = "select patient.p_id,patient.p_name,patient.age,patient.gender,appoinment.d_id,appoinment.d_name,\r\n"
-					+ "appoinment.appoinment_id,appoinment.problem,appoinment.appoinment_date,\r\n"
-					+ "prescription.dprescription,prescription.dnotes\r\n"
-					+ "from patient inner join appoinment on patient.p_id =  appoinment.p_id   \r\n"
-					+ "inner join prescription on patient.p_id = prescription.p_id\r\n"
-					+ "order by appoinment.appoinment_date desc;";
-			ResultSet rs = st.executeQuery(sql);
-			logger.info("\n*-*-*-*-*-*-*-*-*-* History Of Patient *-*-*-*-*-*-*-*-*-*-*-*-*");
-			logger.info(
-					"\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Patient Data*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
-			while (rs.next()) {
-				String pid = rs.getString(1);
-				String pname = rs.getString(2);
-				String page = rs.getString(3);
-				String pgender = rs.getString(4);
-				String doctorId = rs.getString(5);
-				String doctorname = rs.getString(6);
-				String appoinId = rs.getString(7);
-				String pproblem = rs.getString(8);
-				String appoindate = rs.getString(9);
-				String prescription = rs.getString(10);
-				String note = rs.getString(11);
-				System.out.printf("%5s  %20s  %5s  %7s  %5s  %20s  %3s  %15s  %15s  %25s  %25s\n", pid, pname, page,
-						pgender, doctorId, doctorname, appoinId, pproblem, appoindate, prescription, note);
-			}
-			logger.info(
-					"*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
-			st.close();
-			con.close();
-
-		} catch (Exception e) {
-			logger.info(e.getMessage());
-		}
+		logger.info("historyAndPresciption");
+//		try {
+//			Class.forName("com.mysql.cj.jdbc.Driver");
+//			Connection con = DriverManager.getConnection(ClinicDatabase.URL, ClinicDatabase.USERNAME,
+//					ClinicDatabase.PASSWORD);
+//			Statement st = con.createStatement();
+//			String sql = "select patient.p_id,patient.p_name,patient.age,patient.gender,appoinment.d_id,appoinment.d_name,\r\n"
+//					+ "appoinment.appoinment_id,appoinment.problem,appoinment.appoinment_date,\r\n"
+//					+ "prescription.dprescription,prescription.dnotes\r\n"
+//					+ "from patient inner join appoinment on patient.p_id =  appoinment.p_id   \r\n"
+//					+ "inner join prescription on patient.p_id = prescription.p_id\r\n"
+//					+ "order by appoinment.appoinment_date desc;";
+//			ResultSet rs = st.executeQuery(sql);
+//			logger.info("\n*-*-*-*-*-*-*-*-*-* History Of Patient *-*-*-*-*-*-*-*-*-*-*-*-*");
+//			logger.info(
+//					"\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Patient Data*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
+//			while (rs.next()) {
+//				String pid = rs.getString(1);
+//				String pname = rs.getString(2);
+//				String page = rs.getString(3);
+//				String pgender = rs.getString(4);
+//				String doctorId = rs.getString(5);
+//				String doctorname = rs.getString(6);
+//				String appoinId = rs.getString(7);
+//				String pproblem = rs.getString(8);
+//				String appoindate = rs.getString(9);
+//				String prescription = rs.getString(10);
+//				String note = rs.getString(11);
+//				System.out.printf("%5s  %20s  %5s  %7s  %5s  %20s  %3s  %15s  %15s  %25s  %25s\n", pid, pname, page,
+//						pgender, doctorId, doctorname, appoinId, pproblem, appoindate, prescription, note);
+//			}
+//			logger.info(
+//					"*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
+//			st.close();
+//			con.close();
+//
+//		} catch (Exception e) {
+//			logger.info(e.getMessage());
+//		}
 	}
 
 }

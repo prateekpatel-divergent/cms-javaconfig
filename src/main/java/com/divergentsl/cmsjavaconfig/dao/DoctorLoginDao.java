@@ -6,10 +6,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
-import com.divergentsl.cmsjavaconfig.ClinicDatabase;
+import com.divergentsl.cmsjavaconfig.DataBaseManager;
 
 /**
  * Doctor Login Class
@@ -23,9 +22,8 @@ public class DoctorLoginDao {
 	public static final String USERNAME = "username";
 	public static final String PASSWORD = "password";
 
-	@Autowired
-	ClinicDatabase clinicDatabase;
-
+	@Autowired 
+	private DataBaseManager dataBaseManager;
 
 	/**
 	 * Doctor Login Method By Parameter
@@ -36,12 +34,9 @@ public class DoctorLoginDao {
 	 * @throws SQLException
 	 */
 	public boolean doctorLogin(String username, String password) throws SQLException {
-
-		Connection con = null;
-		Statement st = null;
-
-		con = clinicDatabase.getConnection();
-		st = con.createStatement();
+		
+		Connection con = dataBaseManager.getConnection();
+		Statement st = con.createStatement();
 
 		ResultSet rs = st.executeQuery("select * from administration where a_username = '" + username
 				+ "' AND a_password = '" + password + "'");

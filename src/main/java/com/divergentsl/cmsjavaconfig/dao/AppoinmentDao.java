@@ -17,8 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
-import com.divergentsl.cmsjavaconfig.ClinicDatabase;
-import com.divergentsl.cmsjavaconfig.MainMenu;
+import com.divergentsl.cmsjavaconfig.DataBaseManager;
 
 
 
@@ -43,7 +42,10 @@ public class AppoinmentDao {
 	private static Logger logger = LoggerFactory.getLogger(AppoinmentDao.class);
 	
 	@Autowired
-	ClinicDatabase clinicDatabase;
+	Environment evn;
+	
+	@Autowired
+	private DataBaseManager dataBaseManager;
 
 
 	/**
@@ -63,9 +65,7 @@ public class AppoinmentDao {
 	public int insert(String appinId, String pName, String dName, String problem, String appoinmentDate, String date,
 			String pId, String dId) throws SQLException {
 
-		Connection con = null;
-
-		con = clinicDatabase.getConnection();
+		Connection con = dataBaseManager.getConnection();
 		String sql = "insert into appoinment values(?,?,?,?,?,?,?,?)";
 		PreparedStatement stmt = con.prepareStatement(sql);
 		stmt.setString(1, ID);
@@ -91,10 +91,9 @@ public class AppoinmentDao {
 	 * @throws SQLException
 	 */
 	public List<Map<String, String>> list() throws SQLException {
-		Connection con = null;
-		Statement st = null;
-		con = clinicDatabase.getConnection();
-		st = con.createStatement();
+
+		Connection con = dataBaseManager.getConnection();
+		Statement st = con.createStatement();
 		ResultSet rs = st.executeQuery("select * from appoinment");
 		List<Map<String, String>> appoinList = new ArrayList<>();
 		while (rs.next()) {

@@ -3,6 +3,9 @@ package com.divergentsl.cmsjavaconfig;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+
 /**
  * In Which Get Url ,Username, Password Get
  * 
@@ -10,11 +13,12 @@ import java.sql.SQLException;
  *
  */
 
-
 public interface ClinicDatabase {
-	final String URL = "jdbc:mysql://localhost:3306/clinic_Managment_System";
-	final String USERNAME = "root";
-	final String PASSWORD = "root";
+	
+
+	final String URL = "spring.datasource.url";
+	final String USERNAME = "spring.datasource.username";
+	final String PASSWORD = "spring.datasource.password";
 	
 	public Connection getConnection() throws SQLException;
 }

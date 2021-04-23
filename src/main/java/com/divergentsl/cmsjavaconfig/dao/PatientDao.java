@@ -14,10 +14,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
-import com.divergentsl.cmsjavaconfig.ClinicDatabase;
+import com.divergentsl.cmsjavaconfig.DataBaseManager;
 
 
 
@@ -45,7 +44,7 @@ public class PatientDao {
 	private static Logger logger = LoggerFactory.getLogger(PatientDao.class);
 
 	@Autowired
-	ClinicDatabase clinicDatabase;
+	private DataBaseManager dataBaseManager;
 
 	/**
 	 * Delete Record By ID
@@ -55,12 +54,8 @@ public class PatientDao {
 	 * @throws SQLException
 	 */
 	public int delete(String pid) throws SQLException {
-		Connection con = null;
-		Statement st = null;
-
-		con = clinicDatabase.getConnection();
-		st = con.createStatement();
-
+		Connection con = dataBaseManager.getConnection();
+		Statement st = con.createStatement();
 		st.executeUpdate("delete from patient where p_id = '" + pid + "';");
 
 		st.close();
@@ -78,13 +73,9 @@ public class PatientDao {
 	 */
 	public Map searchById(String pid) throws SQLException {
 
-		Connection con = null;
-		Statement st = null;
+		Connection con = dataBaseManager.getConnection();
+		Statement st = con.createStatement();
 		Map<String, String> map = new HashMap<>();
-
-		con = clinicDatabase.getConnection();
-		st = con.createStatement();
-
 		ResultSet rs = st.executeQuery("select * from patient where p_id = '" + pid + "'");
 
 		if (rs.next()) {
@@ -122,10 +113,7 @@ public class PatientDao {
 	 */
 	public int insert(String pid, String pname, String address, String age, String weight, String gender,
 			String contactno, String curdate, String appoinmentdate, String problem) throws SQLException {
-
-		Connection con = null;
-
-		con = clinicDatabase.getConnection();
+		Connection con = dataBaseManager.getConnection();
 		String sql = "insert into patient(P_ID,P_NAME,Addresss,Age,weight,Gender,Contact_No,ACurrent_Date,Appoiment_Date,Problem) values(?,?,?,?,?,?,?,?,?,?)";
 		PreparedStatement stmt = con.prepareStatement(sql);
 		stmt.setString(1, ID);
@@ -153,10 +141,8 @@ public class PatientDao {
 	 * @throws SQLException
 	 */
 	public List<Map<String, String>> list() throws SQLException {
-		Connection con = null;
-		Statement st = null;
-		con = clinicDatabase.getConnection();
-		st = con.createStatement();
+		Connection con = dataBaseManager.getConnection();
+		Statement st = con.createStatement();
 		ResultSet rs = st.executeQuery("select * from patient");
 		List<Map<String, String>> doctorList = new ArrayList<>();
 		while (rs.next()) {

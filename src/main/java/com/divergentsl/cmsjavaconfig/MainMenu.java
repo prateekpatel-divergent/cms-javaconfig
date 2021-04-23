@@ -70,8 +70,8 @@ public class MainMenu {
 				break;
 
 			case "3":
-				System.exit(0);
 				logger.info("Exit");
+				System.exit(0);
 				break;
 
 			default:

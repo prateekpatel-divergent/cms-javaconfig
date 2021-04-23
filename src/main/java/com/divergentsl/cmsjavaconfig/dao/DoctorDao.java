@@ -13,10 +13,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
-import com.divergentsl.cmsjavaconfig.ClinicDatabase;
+import com.divergentsl.cmsjavaconfig.DataBaseManager;
 
 /**
  * Doctor Dao Class
@@ -34,7 +33,7 @@ public class DoctorDao {
 	public static final String DEGREE = "ddegree";
 
 	@Autowired
-	ClinicDatabase clinicDatabase;
+	private DataBaseManager dataBaseManager;
 
 	private static Logger logger = LoggerFactory.getLogger(DoctorDao.class);
 	
@@ -46,9 +45,9 @@ public class DoctorDao {
 	 * @throws SQLException
 	 */
 	public int delete(String string) throws SQLException {
-		Connection con = null;
-		Statement st = null;
-		con = clinicDatabase.getConnection();
+
+		Connection con = dataBaseManager.getConnection();
+		Statement st = con.createStatement();
 		st = con.createStatement();
 		int st1 = st.executeUpdate("delete from doctor where d_id = '" + string + "'");
 		st.close();
@@ -64,14 +63,9 @@ public class DoctorDao {
 	 * @throws SQLException
 	 */
 	public Map searchById(String did) throws SQLException {
-
-		Connection con = null;
-		Statement st = null;
 		Map<String, String> map = new HashMap<>();
-
-		con = clinicDatabase.getConnection();
-		st = con.createStatement();
-
+		Connection con = dataBaseManager.getConnection();
+		Statement st = con.createStatement();
 		ResultSet rs = st.executeQuery("select * from doctor where d_id ='" + did + "'");
 
 		if (rs.next()) {
@@ -101,8 +95,7 @@ public class DoctorDao {
 	 */
 	public int insert(String did, String dname, String speciality, String contactno, String fee, String degree)
 			throws SQLException {
-
-		Connection con= clinicDatabase.getConnection();
+		Connection con = dataBaseManager.getConnection();
 		String sql = "insert into doctor values(?,?,?,?,?,?)";
 		PreparedStatement stmt = con.prepareStatement(sql);
 		stmt.setString(1, ID);
@@ -124,10 +117,8 @@ public class DoctorDao {
 	 * @throws SQLException
 	 */
 	public List<Map<String, String>> list() throws SQLException {
-		Connection con = null;
-		Statement st = null;
-		con = clinicDatabase.getConnection();
-		st = con.createStatement();
+		Connection con = dataBaseManager.getConnection();
+		Statement st = con.createStatement();
 		ResultSet rs = st.executeQuery("select * from doctor");
 		List<Map<String, String>> doctorList = new ArrayList<>();
 		while (rs.next()) {

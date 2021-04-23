@@ -8,8 +8,8 @@ import java.sql.Statement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.divergentsl.cmsjavaconfig.ClinicDatabase;
 import com.divergentsl.cmsjavaconfig.DataBaseManager;
+
 import org.springframework.core.env.Environment;
 /**
  * Admin Dao
@@ -22,10 +22,12 @@ public class AdminDao {
 
 	public static final String USERNAME = "username";
 	public static final String PASSWORD = "password";
-
-	@Autowired
-	ClinicDatabase clinicDatabase;
 	
+	@Autowired
+	Environment evn;
+	
+	@Autowired
+	private DataBaseManager dataBaseManager;
 	/**
 	 * Admin LOgin Method With Parameter
 	 * 
@@ -36,11 +38,10 @@ public class AdminDao {
 	 */
 	public boolean adminLogin(String username, String password) throws SQLException {
 
-		Connection con = null;
-		Statement st = null;
+		
+		Connection con = dataBaseManager.getConnection();
+		Statement st = con.createStatement();
 
-		con = clinicDatabase.getConnection();
-		st = con.createStatement();
 
 		ResultSet rs = st.executeQuery("select * from administration where a_username = '" + username
 				+ "' AND a_password = '" + password + "'");

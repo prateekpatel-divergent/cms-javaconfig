@@ -13,10 +13,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
-import com.divergentsl.cmsjavaconfig.ClinicDatabase;
+import com.divergentsl.cmsjavaconfig.DataBaseManager;
 
 
 /**
@@ -33,7 +32,7 @@ public class DrugDao {
 	public static final String RATE = "rate";
 
 	@Autowired
-	ClinicDatabase clinicDatabase;
+	private DataBaseManager dataBaseManager;
 
 	private static Logger logger = LoggerFactory.getLogger(DrugDao.class);
 
@@ -45,10 +44,8 @@ public class DrugDao {
 	 * @throws SQLException
 	 */
 	public int delete(String id) throws SQLException {
-		Connection con = null;
-		Statement st = null;
-		con = clinicDatabase.getConnection();
-		st = con.createStatement();
+		Connection con = dataBaseManager.getConnection();
+		Statement st = con.createStatement();
 		st.executeUpdate("delete from drug where d_id = '" + id + "'");
 		st.close();
 		con.close();
@@ -64,13 +61,9 @@ public class DrugDao {
 	 * @throws SQLException
 	 */
 	public Map searchById(String id) throws SQLException {
-
-		Connection con = null;
-		Statement st = null;
+		Connection con = dataBaseManager.getConnection();
+		Statement st = con.createStatement();
 		Map<String, String> map = new HashMap<>();
-
-		con = clinicDatabase.getConnection();
-		st = con.createStatement();
 
 		ResultSet rs = st.executeQuery("select * from drug where d_id = '" + id + "'");
 
@@ -94,9 +87,7 @@ public class DrugDao {
 	 * @throws SQLException
 	 */
 	public int insert(String id, String name, String rate) throws SQLException {
-		Connection con = null;
-
-		con = clinicDatabase.getConnection();
+		Connection con = dataBaseManager.getConnection();
 		String sql = "insert into drug values(?,?,?)";
 		PreparedStatement stmt = con.prepareStatement(sql);
 		stmt.setString(1, ID);
@@ -115,10 +106,8 @@ public class DrugDao {
 	 * @throws SQLException
 	 */
 	public List<Map<String, String>> list() throws SQLException {
-		Connection con = null;
-		Statement st = null;
-		con = clinicDatabase.getConnection();
-		st = con.createStatement();
+		Connection con = dataBaseManager.getConnection();
+		Statement st = con.createStatement();
 		ResultSet rs = st.executeQuery("select * from drug");
 		List<Map<String, String>> durgList = new ArrayList<>();
 		while (rs.next()) {
