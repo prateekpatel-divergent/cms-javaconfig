@@ -92,17 +92,17 @@ public class LabTestDao {
 	 * @return
 	 * @throws SQLException
 	 */
-	public int insert(String labid, String pid, String test, String date, String rate) throws SQLException {
+	public int insert(String labid, String pid, String test,String date, String rate) throws SQLException {
 		Connection con = dataBaseManager.getConnection();
 		String sql = "insert into lab_test values(?,?,?,?,?)";
 		PreparedStatement stmt = con.prepareStatement(sql);
-		stmt.setString(1, ID);
-		stmt.setString(2, PID);
-		stmt.setString(3, TEST);
+		stmt.setString(1, labid);
+		stmt.setString(2, pid);
+		stmt.setString(3, test);
 		long millis = System.currentTimeMillis();
 		Date date1 = new Date(millis);
 		stmt.setDate(4, date1);
-		stmt.setString(5, RATE);
+		stmt.setString(5, rate);
 		int i = stmt.executeUpdate();
 		logger.info("\ninserted record successfully...");
 		con.close();

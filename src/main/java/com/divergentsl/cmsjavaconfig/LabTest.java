@@ -4,6 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +18,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.divergentsl.cmsjavaconfig.dao.LabTestDao;
+import com.divergentsl.cmsjavaconfig.dto.DrugDto;
+import com.divergentsl.cmsjavaconfig.dto.LabTestDto;
 
 import java.sql.*;
+import java.time.LocalDate;
 
 /**
  * All Opeartion Of CRUD Lab Test
@@ -31,6 +40,7 @@ public class LabTest {
 
 	@Autowired
 	private Admin admin;
+
 	/**
 	 * Show All Operation on Console
 	 */
@@ -73,7 +83,6 @@ public class LabTest {
 			default:
 				break;
 			}
-			sc.close();
 		}
 	}
 
@@ -84,21 +93,30 @@ public class LabTest {
 	 */
 	public Map<String, String> inputLabTestData() {
 		Scanner sc = new Scanner(System.in);
+		LabTestDto labTestDto = new LabTestDto();
 		System.out.println("Enter LabTest_Id");
 		String lbid = sc.nextLine();
+		labTestDto.setID(lbid);
 		System.out.println("Enter Patient Id");
 		String pid = sc.nextLine();
+		labTestDto.setPID(pid);
 		System.out.println("Enter Test");
 		String testname = sc.nextLine();
+		labTestDto.setTEST(testname);
 		System.out.println("Enter Rate of Test");
 		int rate = sc.nextInt();
 		String ratestring = Integer.toString(rate);
+		labTestDto.setRATE(ratestring);
 
 		Map<String, String> map = new HashMap<>();
 		map.put("1", lbid);
 		map.put("2", pid);
 		map.put("3", testname);
 		map.put("4", ratestring);
+
+		if (validateLabTest(labTestDto)) {
+			return null;
+		}
 		return map;
 	}
 
@@ -107,11 +125,31 @@ public class LabTest {
 	 */
 	public void insertLabTestData() {
 		try {
-			labTestDao.insert("lbid", "pid", "testname", "currentdate", "5");
-			logger.debug("Insert successfully!!!!!!");
+			Map<String, String> map = inputLabTestData();
+			if (map != null) {
+				labTestDao.insert(map.get("1"), map.get("2"), map.get("3"), map.get("null"), map.get("4"));
+				logger.debug("Insert successfully!!!!!!");
+			} else {
+				logger.info("Invalid Input");
+			}
 		} catch (SQLException e) {
 			logger.info(e.getMessage());
 		}
+	}
+
+	/**
+	 * validatorFactory method for validation
+	 * @param labTestDto
+	 * @return
+	 */
+	private boolean validateLabTest(LabTestDto labTestDto) {
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		Validator validator = factory.getValidator();
+		Set<ConstraintViolation<LabTestDto>> violations = validator.validate(labTestDto);
+		for (ConstraintViolation<LabTestDto> violation : violations) {
+			logger.error(violation.getMessage());
+		}
+		return violations.size() > 0;
 	}
 
 	/**

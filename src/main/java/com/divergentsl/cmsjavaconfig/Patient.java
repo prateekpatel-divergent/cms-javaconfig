@@ -5,6 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +19,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.divergentsl.cmsjavaconfig.dao.PatientDao;
+import com.divergentsl.cmsjavaconfig.dto.DoctorDto;
+import com.divergentsl.cmsjavaconfig.dto.PatientDto;
 
 /**
  * All Patient CRUD Operation Is done
@@ -27,12 +35,13 @@ public class Patient {
 
 	@Autowired
 	private PatientDao patientDao;
-	
+
 	@Autowired
 	private Admin admin;
-	
+
 	@Autowired
 	private Doctor doctor;
+
 	/**
 	 * Show All OPtion Of Admin to CRUD Operation
 	 */
@@ -81,16 +90,27 @@ public class Patient {
 	 */
 	public Map<String, String> inputPatientData() {
 		Scanner sc = new Scanner(System.in);
+		PatientDto patientDto = new PatientDto();
 		System.out.println("Enter Patient_ID,Name,Address,Age,Weight,Gender,Contact_No,AppoimentDate,Problem");
 		String pid = sc.nextLine();
+		patientDto.setID(pid);
 		String pname = sc.nextLine();
+		patientDto.setPNAME(pname);
 		String paddress = sc.nextLine();
+		patientDto.setADDRESS(paddress);
 		String page = sc.nextLine();
+		patientDto.setAGE(page);
 		String pweight = sc.nextLine();
+		patientDto.setWEIGHT(pweight);
 		String pgender = sc.nextLine();
+		patientDto.setGENDER(pgender);
 		String pcontactno = sc.nextLine();
+		patientDto.setCONTACTNO(pcontactno);
 		String pappoimentdate = sc.nextLine();
+		patientDto.setAPPOINTMENTDATE(pappoimentdate);
 		String pproblem = sc.nextLine();
+		patientDto.setPROBLEM(pproblem);
+
 		Map<String, String> map = new HashMap<>();
 		map.put("1", pid);
 		map.put("2", pname);
@@ -101,6 +121,10 @@ public class Patient {
 		map.put("7", pcontactno);
 		map.put("9", pappoimentdate);
 		map.put("10", pproblem);
+
+		if (validatePatient(patientDto)) {
+			return null;
+		}
 		return map;
 	}
 
@@ -109,11 +133,32 @@ public class Patient {
 	 */
 	public void insertPatientData() {
 		try {
-			patientDao.insert("pid", "pname", "address", "age", "weight", "gender", "contactno", "appoinmentdate",
-					"currentdate", "problem");
+			Map<String, String> map = inputPatientData();
+			if (map != null) {
+				patientDao.insert(map.get("1"), map.get("2"), map.get("3"), map.get("4"), map.get("5"), map.get("6"),
+						map.get("7"), map.get("curdate"), map.get("9"), map.get("10"));
+				logger.info("Insert data Succesfully");
+			} else {
+				logger.info("Invalid Input");
+			}
 		} catch (SQLException e) {
 			logger.debug(e.getMessage());
 		}
+	}
+
+	/**
+	 * validatorFactory method for validation
+	 * @param patientDto
+	 * @return
+	 */
+	private boolean validatePatient(PatientDto patientDto) {
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		Validator validator = factory.getValidator();
+		Set<ConstraintViolation<PatientDto>> violations = validator.validate(patientDto);
+		for (ConstraintViolation<PatientDto> violation : violations) {
+			logger.error(violation.getMessage());
+		}
+		return violations.size() > 0;
 	}
 
 	/**
@@ -211,43 +256,43 @@ public class Patient {
 	 */
 	public void generateInvoice() {
 		logger.info("Generate Invoice");
-//		try {
-//			Scanner sc = new Scanner(System.in);
-//			Class.forName("com.mysql.cj.jdbc.Driver");
-//			Connection con = DriverManager.getConnection(ClinicDatabase.URL, ClinicDatabase.USERNAME,
-//					ClinicDatabase.PASSWORD);
-//			Statement st = con.createStatement();
-//			logger.info("\nEnter Patient Id");
-//			String id = sc.nextLine();
-//			String sql = "select appoinment.P_ID,appoinment.P_Name,appoinment.ACurrent_Date,appoinment.Problem,doctor.D_Name,doctor.fee\r\n"
-//					+ "from appoinment join doctor on appoinment.d_id = doctor.D_Id where appoinment.p_id ='" + id
-//					+ "';";
-//			ResultSet rs = st.executeQuery(sql);
-//
-//			if (!rs.next()) {
-//				logger.info("Record Is not Found!\n");
-//				doctor.printDoctorOptions();
-//			} else {
-//				System.out.println(
-//						"\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Patient Invoice*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
-//				String pid = rs.getString(1);
-//				String pname = rs.getString(2);
-//				Date pcurrentdate = rs.getDate(3);
-//				String pproblem = rs.getString(4);
-//				String dname = rs.getString(5);
-//				String fee = rs.getString(6);
-//				System.out.printf("%30s  %30s\n", "Patient Id :" + pid, "Date : " + pcurrentdate);
-//				System.out.printf("%30s %30s\n", "Patient Name :" + pname, "Problem :" + pproblem);
-//				System.out.printf("%30s %30s\n\n", "Docter Name :" + dname, "Fee :" + fee);
-//				System.out.println(
-//						"*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
-//			}
-//			doctor.printDoctorOptions();
-//			st.close();
-//			con.close();
-//		} catch (Exception e) {
-//			logger.info(e.getMessage());
-//		}
+		try {
+			Scanner sc = new Scanner(System.in);
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection(ClinicDatabase.URL, ClinicDatabase.USERNAME,
+					ClinicDatabase.PASSWORD);
+			Statement st = con.createStatement();
+			logger.info("\nEnter Patient Id");
+			String id = sc.nextLine();
+			String sql = "select appoinment.P_ID,appoinment.P_Name,appoinment.ACurrent_Date,appoinment.Problem,doctor.D_Name,doctor.fee\r\n"
+					+ "from appoinment join doctor on appoinment.d_id = doctor.D_Id where appoinment.p_id ='" + id
+					+ "';";
+			ResultSet rs = st.executeQuery(sql);
+
+			if (!rs.next()) {
+				logger.info("Record Is not Found!\n");
+				doctor.printDoctorOptions();
+			} else {
+				System.out.println(
+						"\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Patient Invoice*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
+				String pid = rs.getString(1);
+				String pname = rs.getString(2);
+				Date pcurrentdate = rs.getDate(3);
+				String pproblem = rs.getString(4);
+				String dname = rs.getString(5);
+				String fee = rs.getString(6);
+				System.out.printf("%30s  %30s\n", "Patient Id :" + pid, "Date : " + pcurrentdate);
+				System.out.printf("%30s %30s\n", "Patient Name :" + pname, "Problem :" + pproblem);
+				System.out.printf("%30s %30s\n\n", "Docter Name :" + dname, "Fee :" + fee);
+				System.out.println(
+						"*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
+			}
+			doctor.printDoctorOptions();
+			st.close();
+			con.close();
+		} catch (Exception e) {
+			logger.info(e.getMessage());
+		}
 	}
 
 }

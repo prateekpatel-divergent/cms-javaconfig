@@ -5,6 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +19,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.divergentsl.cmsjavaconfig.dao.DrugDao;
+import com.divergentsl.cmsjavaconfig.dto.DoctorDto;
+import com.divergentsl.cmsjavaconfig.dto.DrugDto;
 
 /**
  * Drug Class For All CRUD Operation
@@ -24,12 +32,13 @@ import com.divergentsl.cmsjavaconfig.dao.DrugDao;
 public class Drug {
 
 	private static Logger logger = LoggerFactory.getLogger(Drug.class);
-	
+
 	@Autowired
 	private DrugDao drugDao;
 
 	@Autowired
 	private Admin admin;
+
 	/**
 	 * Show All Option
 	 */
@@ -78,17 +87,25 @@ public class Drug {
 	 */
 	public Map<String, String> inputDoctorData() {
 		Scanner sc = new Scanner(System.in);
+		DrugDto drugDto = new DrugDto();
 		System.out.println("Enter Drug_Id");
-		String did = sc.nextLine();
+		String id = sc.nextLine();
+		drugDto.setID(id);
 		System.out.println("Enter Drug Name");
-		String dname = sc.nextLine();
+		String name = sc.nextLine();
+		drugDto.setNAME(name);
 		System.out.println("Enter Drug Rate");
-		String drate = sc.nextLine();
+		String rate = sc.nextLine();
+		drugDto.setRATE(rate);
 
 		Map<String, String> map = new HashMap<>();
-		map.put("1", did);
-		map.put("2", dname);
-		map.put("3", drate);
+		map.put("1", id);
+		map.put("2", name);
+		map.put("3", rate);
+
+		if (validateDrug(drugDto)) {
+			return null;
+		}
 		return map;
 	}
 
@@ -98,13 +115,30 @@ public class Drug {
 	public void insertDrugData() {
 		try {
 			Map<String, String> map = inputDoctorData();
-			map.get("id");
-			map.get("name");
-			map.get("rate");
-			drugDao.insert("id", "name", "rate");
+			if (map != null) {
+				drugDao.insert(map.get("1"), map.get("2"), map.get("3"));
+				logger.info("Insert succesfully");
+			} else {
+				logger.info("Invalid Input");
+			}
 		} catch (SQLException e) {
 			logger.info(e.getMessage());
 		}
+	}
+
+	/**
+	 * validatorFactory method for validation
+	 * @param drugDto
+	 * @return
+	 */
+	private boolean validateDrug(DrugDto drugDto) {
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		Validator validator = factory.getValidator();
+		Set<ConstraintViolation<DrugDto>> violations = validator.validate(drugDto);
+		for (ConstraintViolation<DrugDto> violation : violations) {
+			logger.error(violation.getMessage());
+		}
+		return violations.size() > 0;
 	}
 
 	/**

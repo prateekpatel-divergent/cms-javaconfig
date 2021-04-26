@@ -10,6 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.constraints.Negative;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +29,13 @@ import com.divergentsl.cmsjavaconfig.DataBaseManager;
  */
 @Repository
 public class DoctorDao {
-	public static final String ID = "did";
-	public static final String NAME = "dname";
-	public static final String SPECIALITY = "speciality";
-	public static final String CONTACT_NO = "dcontact";
-	public static final String FEE = "dfee";
-	public static final String DEGREE = "ddegree";
+
+	public static String ID = "did";
+	public static String NAME = "dname";
+	public static String SPECIALITY = "speciality";
+	public static String CONTACT_NO = "dcontact";
+	public static String FEE = "dfee";
+	public static String DEGREE = "ddegree";
 
 	@Autowired
 	private DataBaseManager dataBaseManager;
@@ -98,14 +103,14 @@ public class DoctorDao {
 		Connection con = dataBaseManager.getConnection();
 		String sql = "insert into doctor values(?,?,?,?,?,?)";
 		PreparedStatement stmt = con.prepareStatement(sql);
-		stmt.setString(1, ID);
-		stmt.setString(2, NAME);
-		stmt.setString(3, SPECIALITY);
-		stmt.setString(4, CONTACT_NO);
-		stmt.setString(5, FEE);
-		stmt.setString(6, DEGREE);
+		stmt.setString(1, did);
+		stmt.setString(2, dname);
+		stmt.setString(3, speciality);
+		stmt.setString(4, contactno);
+		stmt.setString(5, fee);
+		stmt.setString(6, degree);
 		int i = stmt.executeUpdate();
-		logger.info("\ninserted record successfully...");
+	
 		con.close();
 		return i;
 	}

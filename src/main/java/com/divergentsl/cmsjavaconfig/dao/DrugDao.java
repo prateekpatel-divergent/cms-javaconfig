@@ -90,9 +90,9 @@ public class DrugDao {
 		Connection con = dataBaseManager.getConnection();
 		String sql = "insert into drug values(?,?,?)";
 		PreparedStatement stmt = con.prepareStatement(sql);
-		stmt.setString(1, ID);
-		stmt.setString(2, NAME);
-		stmt.setString(3, RATE);
+		stmt.setString(1, id);
+		stmt.setString(2, name);
+		stmt.setString(3, rate);
 		int i = stmt.executeUpdate();
 		logger.info("\ninserted record successfully...");
 		con.close();
