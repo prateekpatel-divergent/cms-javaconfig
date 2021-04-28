@@ -186,7 +186,7 @@ public class Patient {
 
 			if (patient.size() != 0) {
 				System.out.println(
-						"\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Docter Data*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
+						"\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Patient Data*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
 				System.out.printf("%5s  %15s  %15s  %3s  %4s  %6s  %12s  %12s  %12s  %20s\n",
 						patient.get(PatientDao.ID), patient.get(PatientDao.PNAME), patient.get(PatientDao.ADDRESS),
 						patient.get(PatientDao.AGE), patient.get(PatientDao.WEIGHT), patient.get(PatientDao.GENDER),
@@ -233,10 +233,9 @@ public class Patient {
 	public void listAllPatientData() {
 		try {
 			System.out.println(
-					"\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Docter Data*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
-			List<Map<String, String>> patientList = patientDao.list();
-
-			for (Map<String, String> patient : patientList) {
+					"\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Patient Data*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
+			List<Map<String, Object>> patientList = patientDao.list();
+			for (Map<String, Object> patient : patientList) {
 				System.out.printf("%5s  %15s  %15s  %3s  %4s  %6s  %12s  %12s  %12s  %20s\n",
 						patient.get(PatientDao.ID), patient.get(PatientDao.PNAME), patient.get(PatientDao.ADDRESS),
 						patient.get(PatientDao.AGE), patient.get(PatientDao.WEIGHT), patient.get(PatientDao.GENDER),

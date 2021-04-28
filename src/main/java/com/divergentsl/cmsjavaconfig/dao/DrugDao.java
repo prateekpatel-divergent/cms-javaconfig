@@ -13,6 +13,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.divergentsl.cmsjavaconfig.DataBaseManager;
@@ -33,6 +34,9 @@ public class DrugDao {
 
 	@Autowired
 	private DataBaseManager dataBaseManager;
+	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 
 	private static Logger logger = LoggerFactory.getLogger(DrugDao.class);
 
@@ -44,12 +48,8 @@ public class DrugDao {
 	 * @throws SQLException
 	 */
 	public int delete(String id) throws SQLException {
-		Connection con = dataBaseManager.getConnection();
-		Statement st = con.createStatement();
-		st.executeUpdate("delete from drug where d_id = '" + id + "'");
-		st.close();
-		con.close();
-		return 1;
+		int st1 = jdbcTemplate.update("delete from drug where d_id = '" + id + "'");
+		return st1;
 
 	}
 
@@ -87,16 +87,9 @@ public class DrugDao {
 	 * @throws SQLException
 	 */
 	public int insert(String id, String name, String rate) throws SQLException {
-		Connection con = dataBaseManager.getConnection();
-		String sql = "insert into drug values(?,?,?)";
-		PreparedStatement stmt = con.prepareStatement(sql);
-		stmt.setString(1, id);
-		stmt.setString(2, name);
-		stmt.setString(3, rate);
-		int i = stmt.executeUpdate();
-		logger.info("\ninserted record successfully...");
-		con.close();
-		return i;
+		String sql = "insert into drug values('" + id + "', '" + name + "','" + rate + "')";
+		int stmt = jdbcTemplate.update(sql);
+		return stmt;
 	}
 
 	/**
@@ -105,19 +98,10 @@ public class DrugDao {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<Map<String, String>> list() throws SQLException {
-		Connection con = dataBaseManager.getConnection();
-		Statement st = con.createStatement();
-		ResultSet rs = st.executeQuery("select * from drug");
-		List<Map<String, String>> durgList = new ArrayList<>();
-		while (rs.next()) {
-			Map<String, String> map = new HashMap<>();
-			map.put(ID, rs.getString(1));
-			map.put(NAME, rs.getString(2));
-			map.put(RATE, rs.getString(3));
-			durgList.add(map);
-		}
-		return durgList;
+	public List<Map<String, Object>> list() throws SQLException {
+		List<Map<String, Object>> drugList = new ArrayList<>();
+		drugList = jdbcTemplate.queryForList("select * from drug");
+		return drugList;
 	}
 
 }

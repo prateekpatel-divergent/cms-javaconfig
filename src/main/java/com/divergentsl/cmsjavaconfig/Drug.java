@@ -202,10 +202,11 @@ public class Drug {
 	 */
 	public void listAllDrug() {
 		try {
-			List<Map<String, String>> doctorList = drugDao.list();
+			
 			System.out.println(
-					"\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Docter Data*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
-			for (Map<String, String> drug : doctorList) {
+					"\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Drug Data*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
+			List<Map<String, Object>> doctorList = drugDao.list();
+			for (Map<String, Object> drug : doctorList) {
 				System.out.printf("%5s  %20s  %25s  \n", drug.get(DrugDao.ID), drug.get(DrugDao.NAME),
 						drug.get(DrugDao.RATE));
 			}

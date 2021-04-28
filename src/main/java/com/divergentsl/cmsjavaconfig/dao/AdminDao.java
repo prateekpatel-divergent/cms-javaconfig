@@ -1,16 +1,14 @@
 package com.divergentsl.cmsjavaconfig.dao;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.divergentsl.cmsjavaconfig.DataBaseManager;
-
 import org.springframework.core.env.Environment;
+import org.springframework.jdbc.core.JdbcTemplate;
 /**
  * Admin Dao
  * 
@@ -24,10 +22,7 @@ public class AdminDao {
 	public static final String PASSWORD = "password";
 	
 	@Autowired
-	Environment evn;
-	
-	@Autowired
-	private DataBaseManager dataBaseManager;
+	private JdbcTemplate jdbcTemplate;
 	/**
 	 * Admin LOgin Method With Parameter
 	 * 
@@ -38,17 +33,11 @@ public class AdminDao {
 	 */
 	public boolean adminLogin(String username, String password) throws SQLException {
 
-		
-		Connection con = dataBaseManager.getConnection();
-		Statement st = con.createStatement();
+		List<Map<String, Object>> list = jdbcTemplate.queryForList("select * from administration where a_username ='" + username + "' and a_password ='" + password + "'");
 
-
-		ResultSet rs = st.executeQuery("select * from administration where a_username = '" + username
-				+ "' AND a_password = '" + password + "'");
-
-		if(rs.next())
-			return true;
-		else
+		if(list.isEmpty())
 			return false;
+		else
+			return true;
 	}
 }

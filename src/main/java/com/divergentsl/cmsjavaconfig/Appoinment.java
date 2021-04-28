@@ -121,10 +121,10 @@ public class Appoinment {
 	public void showAllAppoinment() {
 		try {
 			System.out.println(
-					"\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Docter Data*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
-			List<Map<String, String>> patientList = appoinmentDao.list();
+					"\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Appoinment Data*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
+			List<Map<String, Object>> patientList = appoinmentDao.list();
 
-			for (Map<String, String> patient : patientList) {
+			for (Map<String, Object> patient : patientList) {
 				System.out.printf("%5s  %15s  %20s  %15s  %15s  %20s  %5s  %5s\n", patient.get(AppoinmentDao.ID),
 						patient.get(AppoinmentDao.PNAME), patient.get(AppoinmentDao.DNAME),
 						patient.get(AppoinmentDao.APPOINMENTDATE), patient.get(AppoinmentDao.CURRENTDATE),

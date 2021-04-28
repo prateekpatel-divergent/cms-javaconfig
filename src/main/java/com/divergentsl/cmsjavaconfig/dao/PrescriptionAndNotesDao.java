@@ -9,6 +9,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.divergentsl.cmsjavaconfig.DataBaseManager;
@@ -29,7 +30,7 @@ public class PrescriptionAndNotesDao {
 	public static final String DID = "d_id";
 
 	@Autowired
-	private DataBaseManager dataBaseManager;
+	private JdbcTemplate jdbcTemplate;
 
 	private static Logger logger = LoggerFactory.getLogger(PrescriptionAndNotesDao.class);
 
@@ -45,18 +46,9 @@ public class PrescriptionAndNotesDao {
 	 * @throws SQLException
 	 */
 	public int insert(String preId, String pId, String prescription, String note, String dId) throws SQLException {
-		Connection con = dataBaseManager.getConnection();
-		String sql = "insert into prescription values(?,?,?,?,?)";
-		PreparedStatement stmt = con.prepareStatement(sql);
-		stmt.setString(1, preId);
-		stmt.setString(2, pId);
-		stmt.setString(3, prescription);
-		stmt.setString(4, note);
-		stmt.setString(5, dId);
-		int i = stmt.executeUpdate();
-		logger.info("\ninserted record successfully...");
-		con.close();
-		return i;
+		String sql = "insert into doctor values(" + preId + ", '" + pId + "','" + prescription + "'," + note + "','"+ dId + "')";
+		int stmt = jdbcTemplate.update(sql);
+		return stmt;
 	}
 
 }

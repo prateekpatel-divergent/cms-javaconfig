@@ -14,11 +14,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.divergentsl.cmsjavaconfig.DataBaseManager;
-
-
 
 /**
  * Patient Class
@@ -40,11 +39,13 @@ public class PatientDao {
 	public static final String APPOINTMENTDATE = "appointmentdate";
 	public static final String PROBLEM = "problem";
 
-
 	private static Logger logger = LoggerFactory.getLogger(PatientDao.class);
 
 	@Autowired
 	private DataBaseManager dataBaseManager;
+
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 
 	/**
 	 * Delete Record By ID
@@ -54,13 +55,8 @@ public class PatientDao {
 	 * @throws SQLException
 	 */
 	public int delete(String pid) throws SQLException {
-		Connection con = dataBaseManager.getConnection();
-		Statement st = con.createStatement();
-		st.executeUpdate("delete from patient where p_id = '" + pid + "';");
-
-		st.close();
-		con.close();
-		return 1;
+		int st1 = jdbcTemplate.update("delete from delete where d_id = '" + pid + "'");
+		return st1;
 
 	}
 
@@ -113,25 +109,11 @@ public class PatientDao {
 	 */
 	public int insert(String pid, String pname, String address, String age, String weight, String gender,
 			String contactno, String curdate, String appoinmentdate, String problem) throws SQLException {
-		Connection con = dataBaseManager.getConnection();
-		String sql = "insert into patient(P_ID,P_NAME,Addresss,Age,weight,Gender,Contact_No,ACurrent_Date,Appoiment_Date,Problem) values(?,?,?,?,?,?,?,?,?,?)";
-		PreparedStatement stmt = con.prepareStatement(sql);
-		stmt.setString(1, pid);
-		stmt.setString(2, pname);
-		stmt.setString(3, address);
-		stmt.setString(4, age);
-		stmt.setString(5, weight);
-		stmt.setString(6, gender);
-		stmt.setString(7, contactno);
-		long millis = System.currentTimeMillis();
-		Date date = new Date(millis);
-		stmt.setDate(9, date);
-		stmt.setString(8, appoinmentdate);
-		stmt.setString(10, problem);
-		int i = stmt.executeUpdate();
-		logger.info("\ninserted record successfully...");
-		con.close();
-		return i;
+		String sql = "insert into patient values('" + pid + "', '" + pname + "','" + address + "','" + age + "','"
+				+ weight + "','" + gender + "','" + contactno + "','" + curdate + "','" + appoinmentdate + "','"
+				+ problem + "')";
+		int stmt = jdbcTemplate.update(sql);
+		return stmt;
 	}
 
 	/**
@@ -140,26 +122,11 @@ public class PatientDao {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<Map<String, String>> list() throws SQLException {
-		Connection con = dataBaseManager.getConnection();
-		Statement st = con.createStatement();
-		ResultSet rs = st.executeQuery("select * from patient");
-		List<Map<String, String>> doctorList = new ArrayList<>();
-		while (rs.next()) {
-			Map<String, String> doctorRecord = new HashMap<>();
-			doctorRecord.put(ID, rs.getString(1));
-			doctorRecord.put(PNAME, rs.getString(2));
-			doctorRecord.put(ADDRESS, rs.getString(3));
-			doctorRecord.put(AGE, rs.getString(4));
-			doctorRecord.put(WEIGHT, rs.getString(5));
-			doctorRecord.put(GENDER, rs.getString(6));
-			doctorRecord.put(CONTACTNO, rs.getString(7));
-			doctorRecord.put(ACURRENTDATE, rs.getString(8));
-			doctorRecord.put(APPOINTMENTDATE, rs.getString(9));
-			doctorRecord.put(PROBLEM, rs.getString(10));
-			doctorList.add(doctorRecord);
-		}
-		return doctorList;
+	public List<Map<String, Object>> list() throws SQLException {
+
+		List<Map<String, Object>> patientList = new ArrayList<>();
+		patientList = jdbcTemplate.queryForList("select * from patient");
+		return patientList;
 	}
 
 }

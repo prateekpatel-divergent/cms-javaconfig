@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.divergentsl.cmsjavaconfig.DataBaseManager;
@@ -44,8 +45,9 @@ public class AppoinmentDao {
 	@Autowired
 	Environment evn;
 	
+	
 	@Autowired
-	private DataBaseManager dataBaseManager;
+	private JdbcTemplate jdbcTemplate;
 
 
 	/**
@@ -64,24 +66,10 @@ public class AppoinmentDao {
 	 */
 	public int insert(String appinId, String pName, String dName, String problem, String appoinmentDate, String date,
 			String pId, String dId) throws SQLException {
-
-		Connection con = dataBaseManager.getConnection();
-		String sql = "insert into appoinment values(?,?,?,?,?,?,?,?)";
-		PreparedStatement stmt = con.prepareStatement(sql);
-		stmt.setString(1, appinId);
-		stmt.setString(2, pName);
-		stmt.setString(3, dName);
-		stmt.setString(4, problem);
-		stmt.setString(5, appoinmentDate);
-		long millis = System.currentTimeMillis();
-		Date date1 = new Date(millis);
-		stmt.setDate(6, date1);
-		stmt.setString(7, pId);
-		stmt.setString(8, dId);
-		int i = stmt.executeUpdate();
+	
 		logger.info("\ninserted record successfully...");
-		con.close();
-		return i;
+		return this.jdbcTemplate.update("INSERT INTO appointment values('" + appinId + "','" + pName + "','"
+				+ dName + "','" + problem + "','" + appoinmentDate + "','" + date + "','" + pId + "','" + dId + "')");
 	}
 
 	/**
@@ -90,24 +78,10 @@ public class AppoinmentDao {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<Map<String, String>> list() throws SQLException {
-
-		Connection con = dataBaseManager.getConnection();
-		Statement st = con.createStatement();
-		ResultSet rs = st.executeQuery("select * from appoinment");
-		List<Map<String, String>> appoinList = new ArrayList<>();
-		while (rs.next()) {
-			Map<String, String> appoinRecord = new HashMap<>();
-			appoinRecord.put(ID, rs.getString(1));
-			appoinRecord.put(PNAME, rs.getString(2));
-			appoinRecord.put(DNAME, rs.getString(3));
-			appoinRecord.put(PROBLEM, rs.getString(4));
-			appoinRecord.put(APPOINMENTDATE, rs.getString(5));
-			appoinRecord.put(CURRENTDATE, rs.getString(6));
-			appoinRecord.put(PID, rs.getString(7));
-			appoinRecord.put(DID, rs.getString(8));
-			appoinList.add(appoinRecord);
-		}
+	public List<Map<String, Object>> list() throws SQLException {
+		
+		List<Map<String, Object>> appoinList = new ArrayList<>();
+		appoinList = jdbcTemplate.queryForList("select * from appoinment");
 		return appoinList;
 	}
 }

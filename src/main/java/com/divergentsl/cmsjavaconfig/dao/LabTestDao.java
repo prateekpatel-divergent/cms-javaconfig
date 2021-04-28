@@ -14,6 +14,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.divergentsl.cmsjavaconfig.DataBaseManager;
@@ -36,6 +37,9 @@ public class LabTestDao {
 	@Autowired
 	private DataBaseManager dataBaseManager;
 	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	
 	private static Logger logger = LoggerFactory.getLogger(LabTestDao.class);
 
 	/**
@@ -46,12 +50,8 @@ public class LabTestDao {
 	 * @throws SQLException
 	 */
 	public int delete(String id) throws SQLException {
-		Connection con = dataBaseManager.getConnection();
-		Statement st = con.createStatement();
-		st.executeUpdate("delete from lab_test where PLab_id = '" + id + "'");
-		st.close();
-		con.close();
-		return 1;
+		int st1 = jdbcTemplate.update("delete from lab_test where PLab_id = '" + id + "'");
+		return st1;
 
 	}
 
@@ -93,20 +93,9 @@ public class LabTestDao {
 	 * @throws SQLException
 	 */
 	public int insert(String labid, String pid, String test,String date, String rate) throws SQLException {
-		Connection con = dataBaseManager.getConnection();
-		String sql = "insert into lab_test values(?,?,?,?,?)";
-		PreparedStatement stmt = con.prepareStatement(sql);
-		stmt.setString(1, labid);
-		stmt.setString(2, pid);
-		stmt.setString(3, test);
-		long millis = System.currentTimeMillis();
-		Date date1 = new Date(millis);
-		stmt.setDate(4, date1);
-		stmt.setString(5, rate);
-		int i = stmt.executeUpdate();
-		logger.info("\ninserted record successfully...");
-		con.close();
-		return i;
+		String sql = "insert into lab_test values('" + labid + "', '" + pid + "','" + test + "','" + date + "'," + rate + ")";
+		int stmt = jdbcTemplate.update(sql);
+		return stmt;
 	}
 
 	/**
@@ -115,22 +104,10 @@ public class LabTestDao {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<Map<String, String>> list() throws SQLException {
-		Connection con = dataBaseManager.getConnection();
-		Statement st = con.createStatement();
-		ResultSet rs = st.executeQuery("select * from lab_test");
-		List<Map<String, String>> labTestList = new ArrayList<>();
-		while (rs.next()) {
-			Map<String, String> map = new HashMap<>();
-			map.put(ID, rs.getString(1));
-			map.put(PID, rs.getString(2));
-			map.put(TEST, rs.getString(3));
-			map.put(TCURRENTDATE, rs.getString(4));
-			map.put(RATE, rs.getString(5));
-			labTestList.add(map);
-		}
+	public List<Map<String, Object>> list() throws SQLException {
+		List<Map<String, Object>> labTestList = new ArrayList<>();
+		labTestList = jdbcTemplate.queryForList("select * from lab_test");
 		return labTestList;
 	}
 
 }
-//DTO - Data Tranfer Object

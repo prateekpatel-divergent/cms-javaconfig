@@ -134,6 +134,7 @@ public class CurdDoctor {
 
 	/**
 	 * validatorFactory method for validation
+	 * 
 	 * @param doctorDto
 	 * @return
 	 */
@@ -162,14 +163,12 @@ public class CurdDoctor {
 			} else {
 
 				try {
-					Map<String, String> aDoctor = doctorDao.searchById(id);
+					List<Map<String, Object>> aDoctor = doctorDao.searchById(id);
 					if (aDoctor.size() != 0) {
 						System.out.println(
 								"\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Docter Data*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
-						System.out.printf("%10s  %15s  %15s  %15s  %10s  %20s\n", aDoctor.get(doctorDao.ID),
-								aDoctor.get(doctorDao.NAME), aDoctor.get(doctorDao.SPECIALITY),
-								aDoctor.get(doctorDao.CONTACT_NO), aDoctor.get(doctorDao.FEE),
-								aDoctor.get(doctorDao.DEGREE));
+						System.out.printf("%10s  %15s  %15s  %15s  %10s  %20s\n", aDoctor.get(0), aDoctor.get(1),
+								aDoctor.get(2), aDoctor.get(3), aDoctor.get(4), aDoctor.get(5));
 						System.out.println(
 								"*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
 					} else {
@@ -212,13 +211,13 @@ public class CurdDoctor {
 	/**
 	 * Show All List Of Doctor
 	 */
-	public void listAllDoctor() {
+	public String listAllDoctor() {
 
 		try {
-			List<Map<String, String>> doctorList = doctorDao.list();
 			System.out.println(
 					"\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Docter Data*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
-			for (Map<String, String> aDoctor : doctorList) {
+			List<Map<String, Object>> doctorList = doctorDao.list();
+			for (Map<String, Object> aDoctor : doctorList) {
 				System.out.printf("%10s  %15s  %15s  %15s  %10s  %20s\n", aDoctor.get(doctorDao.ID),
 						aDoctor.get(doctorDao.NAME), aDoctor.get(doctorDao.SPECIALITY),
 						aDoctor.get(doctorDao.CONTACT_NO), aDoctor.get(doctorDao.FEE), aDoctor.get(doctorDao.DEGREE));
@@ -228,6 +227,7 @@ public class CurdDoctor {
 		} catch (SQLException e) {
 			logger.info(e.getMessage());
 		}
+		return null;
 	}
 
 }

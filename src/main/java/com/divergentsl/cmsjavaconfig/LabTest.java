@@ -175,7 +175,7 @@ public class LabTest {
 					Map<String, String> labTest = labTestDao.searchById(id);
 					if (labTest.size() != 0) {
 						System.out.println(
-								"\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Drug Data*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\n");
+								"\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*LabTest Data*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\n");
 
 						System.out.printf("%5s  %5s  %20s  %15s  %4s\n", labTest.get(LabTestDao.ID),
 								labTest.get(LabTestDao.PID), labTest.get(LabTestDao.TEST),
@@ -222,10 +222,10 @@ public class LabTest {
 	public void listAllLabTest() {
 		try {
 			System.out.println(
-					"\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Docter Data*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
-			List<Map<String, String>> labTestList = labTestDao.list();
+					"\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*LabTest Data*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
+			List<Map<String, Object>> labTestList = labTestDao.list();
 
-			for (Map<String, String> labTest : labTestList) {
+			for (Map<String, Object> labTest : labTestList) {
 				System.out.printf("%5s  %5s  %20s  %15s  %4s\n", labTest.get(LabTestDao.ID),
 						labTest.get(LabTestDao.PID), labTest.get(LabTestDao.TEST), labTest.get(LabTestDao.TCURRENTDATE),
 						labTest.get(LabTestDao.RATE));
